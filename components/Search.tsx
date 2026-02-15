@@ -1,5 +1,5 @@
 interface SearchProps{
-    handleSearch: (value: String) => void
+    handleSearch: (value: any) => void
 }
 
 export default function Search({handleSearch} : SearchProps){
