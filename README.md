@@ -48,6 +48,6 @@ CozyBlog is a modern, minimal, and cozy-themed blogging platform built to provid
 
 Built with <3 as a modern blogging platform project
 
-===
+---
 
 ## Note: Made it because I wanna have a digital confession platform. And dont worry, i haven't integrated DBs yet so your privacy wont be affected.
