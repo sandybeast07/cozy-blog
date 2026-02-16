@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { supabase } from '@/lib/supabase'
 import { Post } from '@/lib/types'
 import PostCard from '@/components/PostCard'
 import PostEditor from '@/components/PostEditor'
@@ -11,32 +11,28 @@ import Search from '@/components/Search'
 import Header from '@/components/ui/Header'
 
 
-const STORAGE_KEY = 'cozy-journal-posts'
-
-function loadPosts(): Post[] {
-  if (typeof window === 'undefined') return []
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
-  } catch { return [] }
-}
-
-function savePosts(posts: Post[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts))
-}
-
-
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([])
   const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [showEditor, setShowEditor] = useState(false)
   const [editPost, setEditPost] = useState<Post | null>(null)
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    setPosts(loadPosts())
+    fetchPosts()
     setMounted(true)
   }, [])
+
+  const fetchPosts = async () =>{
+    setLoading(true)
+    const { data, error} = await supabase
+      .from('posts')
+      .select('*')
+      .order('created_at', {ascending: false})
+    if (!error && data) setPosts(data)
+    setLoading(false)
+  }
 
   // Memo function for Search
   const filteredPosts = useMemo(() => {
@@ -47,29 +43,34 @@ export default function Home() {
     )
   }, [posts, search])
 
-  const handleSave = (title: string, content: string, mood: Post['mood']) => {
-    let updated: Post[]
+  const handleSave = async (title: string, content: string, mood: Post['mood']) =>{
     if (editPost) {
-      updated = posts.map(p =>
-        p.id === editPost.id
-          ? { ...p, title, content, mood, updatedAt: new Date().toISOString() }
-          : p
-      )
+      const { data, error } = await supabase
+        .from('posts')
+        .update({ title, content, mood, updated_at: new Date().toISOString() })
+        .eq('id', editPost.id)
+        .select()
+        .single()
+      if (!error && data) {
+        setPosts(prev => prev.map(p => p.id === editPost.id ? data : p))
+      }
     } else {
-      const now = new Date().toISOString()
-      const newPost: Post = { id: uuidv4(), title, content, mood, createdAt: now, updatedAt: now }
-      updated = [newPost, ...posts]
+      const { data, error } = await supabase
+        .from('posts')
+        .insert({ title, content, mood })
+        .select()
+        .single()
+      if (!error && data) {
+        setPosts(prev => [data, ...prev])
+      }
     }
-    setPosts(updated)
-    savePosts(updated)
     setShowEditor(false)
     setEditPost(null)
   }
 
-  const handleDelete = (id: string) => {
-    const updated = posts.filter(p => p.id !== id)
-    setPosts(updated)
-    savePosts(updated)
+  const handleDelete = async (id: string) => {
+    const { error } = await supabase.from('posts').delete().eq('id', id)
+    if (!error) setPosts(prev => prev.filter(p => p.id !== id))
   }
 
   const handleEdit = (post: Post) => {
@@ -120,6 +121,14 @@ export default function Home() {
               : `${posts.length} entr${posts.length !== 1 ? 'ies' : 'y'} in your journal`
             }
           </p>
+        )}
+
+        {/* Loading state */}
+        {loading && (
+          <div className="text-center py-24">
+            <div className="text-5xl mb-4 animate-pulse">🕯️</div>
+            <p className="font-body italic text-[#a8916c] dark:text-[#7a6248]">Loading your journal…</p>
+          </div>
         )}
 
         {/* Empty state */}
