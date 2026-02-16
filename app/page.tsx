@@ -24,12 +24,12 @@ export default function Home() {
     setMounted(true)
   }, [])
 
-  const fetchPosts = async () =>{
+  const fetchPosts = async () => {
     setLoading(true)
-    const { data, error} = await supabase
+    const { data, error } = await supabase
       .from('posts')
       .select('*')
-      .order('created_at', {ascending: false})
+      .order('created_at', { ascending: false })
     if (!error && data) setPosts(data)
     setLoading(false)
   }
@@ -43,7 +43,7 @@ export default function Home() {
     )
   }, [posts, search])
 
-  const handleSave = async (title: string, content: string, mood: Post['mood']) =>{
+  const handleSave = async (title: string, content: string, mood: Post['mood']) => {
     if (editPost) {
       const { data, error } = await supabase
         .from('posts')
