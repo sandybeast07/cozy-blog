@@ -8,6 +8,7 @@ function greeting() {
 export default function Header(){
     return(
         <header className="relative overflow-hidden bg-[#2e2316] text-[#fdf6ec]">
+                <div className="bg-orange-600 w-[50px] text-center h-[30px] rounded relative top-4 left-7 text-lg">Beta</div>
                 {/* Decorative circles */}
                 <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-[#c9694a]/20 blur-2xl pointer-events-none" />
                 <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-[#d4924a]/15 blur-2xl pointer-events-none" />
