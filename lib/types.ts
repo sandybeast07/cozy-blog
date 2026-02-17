@@ -2,7 +2,7 @@ export interface Post {
   id: string
   title: string
   content: string
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
   mood?: 'happy' | 'reflective' | 'sad' | 'grateful' | 'anxious' | 'excited'
 }

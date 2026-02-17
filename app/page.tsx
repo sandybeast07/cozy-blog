@@ -132,38 +132,28 @@ export default function Home() {
         )}
 
         {/* Empty state */}
-        {posts.length === 0 && (
-          <div className="text-center py-24 animate-fade-up opacity-0" style={{ animationFillMode: 'forwards' }}>
+         {!loading && posts.length === 0 && (
+          <div className="text-center py-24 animate-fade-up opacity-0" style={{animationFillMode:'forwards'}}>
             <div className="text-6xl mb-4">🕯️</div>
-            <h2 className="font-display text-2xl text-[#4d3d28] mb-2">Your journal awaits</h2>
-            <p className="font-body italic text-[#a8916c] mb-8">Begin with a single thought…</p>
-            <button
-              onClick={openNew}
-              className="px-6 py-3 bg-[#c9694a] text-[#fdf6ec] rounded-xl font-sans font-medium hover:bg-[#b04d30] transition-colors shadow-md"
-            >
+            <h2 className="font-display text-2xl text-[#4d3d28] dark:text-[#c9b89e] mb-2">Your journal awaits</h2>
+            <p className="font-body italic text-[#a8916c] dark:text-[#7a6248] mb-8">Begin with a single thought…</p>
+            <button onClick={openNew} className="px-6 py-3 bg-[#c9694a] text-[#fdf6ec] rounded-xl font-sans font-medium hover:bg-[#b04d30] transition-colors shadow-md">
               Write your first entry
             </button>
           </div>
         )}
 
         {/* No search results */}
-        {posts.length > 0 && filteredPosts.length === 0 && (
-          <div className="text-center py-16 animate-fade-in opacity-0" style={{ animationFillMode: 'forwards' }}>
+         {!loading && posts.length > 0 && filteredPosts.length === 0 && (
+          <div className="text-center py-16 animate-fade-in opacity-0" style={{animationFillMode:'forwards'}}>
             <div className="text-5xl mb-3">🍃</div>
-            <p className="font-body italic text-[#a8916c]">No entries match your search.</p>
+            <p className="font-body italic text-[#a8916c] dark:text-[#7a6248]">No entries match your search.</p>
           </div>
         )}
 
-        {/* Post grid */}
         <div className="space-y-5">
           {filteredPosts.map((post, i) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              index={i}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            <PostCard key={post.id} post={post} index={i} onEdit={handleEdit} onDelete={handleDelete} />
           ))}
         </div>
       </div>

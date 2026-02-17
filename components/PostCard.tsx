@@ -11,12 +11,12 @@ interface PostCardProps {
 }
 
 const moodConfig: Record<string, { emoji: string; label: string; color: string }> = {
-  happy:      { emoji: '☀️', label: 'Happy',      color: 'bg-amber-100 text-amber-700' },
+  happy: { emoji: '☀️', label: 'Happy', color: 'bg-amber-100 text-amber-700' },
   reflective: { emoji: '🌙', label: 'Reflective', color: 'bg-indigo-100 text-indigo-700' },
-  sad:        { emoji: '🌧️', label: 'Sad',        color: 'bg-blue-100 text-blue-700' },
-  grateful:   { emoji: '🍂', label: 'Grateful',   color: 'bg-orange-100 text-orange-700' },
-  anxious:    { emoji: '🌿', label: 'Anxious',    color: 'bg-green-100 text-green-700' },
-  excited:    { emoji: '✨', label: 'Excited',    color: 'bg-yellow-100 text-yellow-700' },
+  sad: { emoji: '🌧️', label: 'Sad', color: 'bg-blue-100 text-blue-700' },
+  grateful: { emoji: '🍂', label: 'Grateful', color: 'bg-orange-100 text-orange-700' },
+  anxious: { emoji: '🌿', label: 'Anxious', color: 'bg-green-100 text-green-700' },
+  excited: { emoji: '✨', label: 'Excited', color: 'bg-yellow-100 text-yellow-700' },
 }
 
 function formatDate(iso: string) {
@@ -32,8 +32,8 @@ function formatTime(iso: string) {
 export default function PostCard({ post, onEdit, onDelete, index }: PostCardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const mood = post.mood ? moodConfig[post.mood] : null
-  const wasEdited = post.updatedAt !== post.createdAt
-  const delayClass = ['delay-100','delay-200','delay-300','delay-400'][index % 4]
+  const wasEdited = post.updated_at !== post.created_at
+  const delayClass = ['delay-100', 'delay-200', 'delay-300', 'delay-400'][index % 4]
 
   return (
     <article
@@ -64,10 +64,8 @@ export default function PostCard({ post, onEdit, onDelete, index }: PostCardProp
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-[#e8ddd0]">
           <div className="text-xs text-[#a8916c] font-sans space-y-0.5">
-            <p>{formatDate(post.createdAt)} · {formatTime(post.createdAt)}</p>
-            {wasEdited && (
-              <p className="italic">Edited {formatDate(post.updatedAt)}</p>
-            )}
+            <p>{formatDate(post.created_at)} · {formatTime(post.created_at)}</p>
+            {wasEdited && <p className="italic">Edited {formatDate(post.updated_at)}</p>}
           </div>
 
           <div className="flex gap-2">
